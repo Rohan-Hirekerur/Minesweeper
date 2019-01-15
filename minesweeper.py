@@ -24,13 +24,13 @@ class Square:
     square_width = screen_width / num_columns
     square_height = screen_height / num_rows
 
-    def __init__(self, is_bomb,  row, column, num_bombs=0):
+    def __init__(self, row, column, is_bomb, num_bombs=0):
         self.is_bomb = is_bomb
         self.row = row
         self.column = column
         self.num_bombs = num_bombs
-        self.x = self.column-1 * self.square_width
-        self.y = self.row-1 * self.square_height
+        self.x = self.column * self.square_width
+        self.y = self.row * self.square_height
 
     def display(self):
         if self.is_bomb:
@@ -48,8 +48,8 @@ class Square:
 class Grid:
     rows = num_rows
     columns = num_columns
-    squares = [[0] * columns] * rows
-    print(squares)
+    squares = np.empty((rows, columns), dtype=Square)
+    print(squares.shape)
 
     def __init__(self):
         for row in range(0, self.rows):
@@ -58,7 +58,7 @@ class Grid:
                 bomb = random.randrange(0, 5)
                 if bomb == 0:
                     is_bomb = True
-                self.squares[row][column] = Square(is_bomb, row, column)
+                self.squares[row][column] = Square(row, column, is_bomb)
         self.find_num_bombs()
 
     def find_num_bombs(self):
@@ -96,7 +96,6 @@ class Grid:
                     if self.squares[row][column+1].is_bomb:
                         self.squares[row][column].num_bombs += 1
 
-                print(self.squares[row][column].is_bomb, self.squares[row][column].num_bombs)
 
     def display(self):
         for row in range(0, self.rows):
