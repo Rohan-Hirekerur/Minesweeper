@@ -17,12 +17,13 @@ pygame.init()
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Minesweeper")
-font = pygame.font.Font(None, 45)
+font = pygame.font.Font(None, 20)
 
 
 class Square:
     square_width = screen_width / num_columns
     square_height = screen_height / num_rows
+    clicked = True
 
     def __init__(self, row, column, is_bomb, num_bombs=0):
         self.is_bomb = is_bomb
@@ -33,16 +34,34 @@ class Square:
         self.y = self.row * self.square_height
 
     def display(self):
-        if self.is_bomb:
-            pygame.draw.rect(screen, black, [self.x, self.y, self.square_width, self.square_height])
-        elif self.num_bombs == 0:
-            pygame.draw.rect(screen, white, [self.x, self.y, self.square_width, self.square_height])
-        elif self.num_bombs in range(1, 3):
-            pygame.draw.rect(screen, green, [self.x, self.y, self.square_width, self.square_height])
-        elif self.num_bombs in range(3, 5):
-            pygame.draw.rect(screen, blue, [self.x, self.y, self.square_width, self.square_height])
-        else:
-            pygame.draw.rect(screen, red, [self.x, self.y, self.square_width, self.square_height])
+        pygame.draw.rect(screen, white, [self.x, self.y, self.square_width, self.square_height])
+        if self.clicked:
+            if self.is_bomb:
+                text = font.render("B", 1, black)
+                text_pos = (self.x, self.y)
+                screen.blit(text, text_pos)
+            elif self.num_bombs == 0:
+                text = font.render("", 1, black)
+                text_pos = (self.x, self.y)
+                screen.blit(text, text_pos)
+            elif self.num_bombs == 1:
+                text = font.render("1", 1, green)
+                text_pos = (self.x, self.y)
+                screen.blit(text, text_pos)
+            elif self.num_bombs == 2:
+                text = font.render("2", 1, blue)
+                text_pos = (self.x, self.y)
+                screen.blit(text, text_pos)
+            elif self.num_bombs == 3:
+                text = font.render("3", 1, red)
+                text_pos = (self.x, self.y)
+                screen.blit(text, text_pos)
+            else:
+                t = str(self.num_bombs)
+                text = font.render(t, 1, black)
+                text_pos = (self.x, self.y)
+                screen.blit(text, text_pos)
+
 
 
 class Grid:
@@ -96,15 +115,16 @@ class Grid:
                     if self.squares[row][column+1].is_bomb:
                         self.squares[row][column].num_bombs += 1
 
-
     def display(self):
         for row in range(0, self.rows):
             for column in range(0, self.columns):
                 self.squares[row][column].display()
 
 
+
+
 g = Grid()
 g.display()
 pygame.display.flip()
-pygame.time.delay(5000)
+pygame.time.delay(10000)
 pygame.quit()
