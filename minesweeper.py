@@ -35,6 +35,7 @@ class Square:
     square_width = screen_width / num_columns
     square_height = screen_height / num_rows
     clicked = False
+    flagged = False
 
     def __init__(self, column, row, is_bomb, num_bombs_around=0):
         self.is_bomb = is_bomb
@@ -46,7 +47,10 @@ class Square:
 
     def display(self):
         if not self.clicked:
-            screen.blit(square_img, (self.x, self.y))
+            if not self.flagged:
+                screen.blit(square_img, (self.x, self.y))
+            else:
+                screen.blit(flag_img, (self.x, self.y))
         if self.clicked:
             pygame.draw.rect(screen, gray, [self.x, self.y, self.square_width, self.square_height])
             if self.is_bomb:
@@ -84,7 +88,7 @@ class Grid:
         for row in range(0, self.rows):
             for column in range(0, self.columns):
                 is_bomb = False
-                bomb = random.randrange(0, 8)
+                bomb = random.randrange(0, 6)
                 if bomb == 0:
                     self.num_bombs += 1
                     is_bomb = True
@@ -151,6 +155,22 @@ class Grid:
             if row < self.rows-1:
                 if not self.squares[column, row+1].clicked:
                     self.show(column, row+1)
+            if column > 0 and row > 0:
+                if not self.squares[column-1, row-1].clicked:
+                    self.show(column-1, row-1)
+                self.squares[column - 1][row - 1].clicked = True
+            if column < self.columns-1 and row < self.rows-1:
+                if not self.squares[column+1, row+1].clicked:
+                    self.show(column+1, row+1)
+                self.squares[column + 1][row + 1].clicked = True
+            if column > 0 and row < self.rows-1:
+                if not self.squares[column-1, row+1].clicked:
+                    self.show(column-1, row+1)
+                self.squares[column - 1][row + 1].clicked = True
+            if column < self.columns-1 and row > 0:
+                if not self.squares[column+1, row-1].clicked:
+                    self.show(column+1, row-1)
+                self.squares[column + 1][row - 1].clicked = True
         return False
 
     def show_all_bombs(self):
@@ -158,6 +178,12 @@ class Grid:
             for column in range(0, self.columns):
                 if self.squares[column][row].is_bomb:
                     self.squares[column][row].clicked = True
+
+    def flag(self, column, row):
+        if self.squares[column][row].flagged:
+            self.squares[column][row].flagged = False
+        else:
+            self.squares[column][row].flagged = True
 
 
 def play():
@@ -179,10 +205,13 @@ def play():
                 x = math.floor(pos[0] / 20)
                 y = math.floor(pos[1] / 20)
                 print(x, y)
-                is_bomb = grid.show(x, y)
-                if is_bomb:
-                    grid.show_all_bombs()
-                    done = True
+                if event.button == 1:
+                    is_bomb = grid.show(x, y)
+                    if is_bomb:
+                        grid.show_all_bombs()
+                        done = True
+                if event.button == 3:
+                    grid.flag(x, y)
 
         clock.tick()
         grid.display()
