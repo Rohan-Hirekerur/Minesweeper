@@ -5,11 +5,11 @@ import math
 import numpy as np
 
 # Initialize numer of rows and columns in the game
-num_rows = 10
-num_columns = 10
+num_rows = 12
+num_columns = 18
 
 # Scaling factor to display grid
-multiplier = 40
+multiplier = 30
 screen_width = num_columns * multiplier
 screen_height = num_rows * multiplier
 
@@ -260,4 +260,5 @@ def play():
 
 
 play()
+pygame.time.delay(3000)
 pygame.quit()
