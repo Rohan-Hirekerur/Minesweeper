@@ -4,7 +4,7 @@ import random
 import math
 import numpy as np
 
-# Initialize numer of rows and columns in the game
+# Initialize number of rows and columns in the game
 num_rows = 12
 num_columns = 18
 
@@ -163,13 +163,11 @@ class Grid:
     # If the clicked square is blank, all its surrounding squares are also shown
     # The function is recursively called to check if the surrounding squares contain empty square
     def show(self, column, row):
-        print(column, row)
         self.squares[column][row].clicked = True
         self.squares[column][row].flagged = False
         if self.squares[column][row].is_bomb:
             return True
         if self.squares[column][row].num_bombs_around == 0:
-            print("In")
             if column > 0:
                 if not self.squares[column-1, row].clicked:
                     self.show(column-1, row)
@@ -242,10 +240,8 @@ def play():
                 done = True
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
-                print(pos)
                 x = math.floor(pos[0] / multiplier)
                 y = math.floor(pos[1] / multiplier)
-                print(x, y)
                 if event.button == 1:               # 1 --> Left click
                     is_bomb = grid.show(x, y)
                     if is_bomb:
