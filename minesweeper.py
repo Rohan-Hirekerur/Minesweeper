@@ -5,11 +5,11 @@ import math
 import numpy as np
 
 # Initialize number of rows and columns in the game
-num_rows = 12
-num_columns = 18
+num_rows = 10
+num_columns = 10
 
 # Scaling factor to display grid
-multiplier = 30
+multiplier = 20
 screen_width = num_columns * multiplier
 screen_height = num_rows * multiplier
 
